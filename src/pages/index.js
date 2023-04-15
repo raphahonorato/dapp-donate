@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Head from 'next/head'
+import Link from 'next/link'
 import Footer from '@/components/Footer'
 import { doLogin } from '@/services/Web3Service'
 
@@ -25,33 +26,49 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      {/* trabalhar nisso */}
-
-      {/* <div className='container px-4 py-5 bg-dark text-light'>  modo dark, apagar a debaixo */}
       <div className='container px-4 py-5'>
-
         <div className='row flex-lg-row-reverse align-items-center py-5 g-5'>
-          <div className='col-10 col-sm-8 col-lg-6'>
-            <img src='/home-donate.jpg' className='d-block mx-lg-auto img-fluid' width='700' height='500' />
-          </div>
+          {
+            !wallet ? (
+              <div className='col-10 col-sm-8 col-lg-6'>
+                <img src='/home-donate.jpg' className='d-block mx-lg-auto img-fluid' width='700' height='500' />
+              </div>
+            )
+              : (
+                <div className='col-10 col-sm-8 col-lg-6'>
+                  <p className='mb-3'>Seja bem-vindo!<br></br>{wallet}</p>
+                  <p className='mb-3'>O que você deseja fazer?</p>
+                  <div className='col-12'>
+                    <p><Link href='/doar' className='btn btn-primary col-6 p-3'>Quero fazer uma doação</Link></p>
+                    <p><Link href='/criar' className='btn btn-secondary col-6 p-3'>Quero criar uma campanha</Link></p>
+                  </div>
+                </div>
+              )
+
+          }
           <div className='col-lg-6'>
-            <h1 className='display-5 fw-bold  lh-1 mb-3'>Donate Crypto</h1>
+            <h1 className='display-5 fw-bold lh-1 mb-3'>Donate Crypto</h1>
             <p className='lead'>Sua plataforma descentralizada de doações!</p>
             <p className='lead mb-3'>Entre com sua carteira, crie sua campanha ou doe para campanhas existentes.</p>
-            <div className='d-grid gap-2 d-md-flex justify-content-md-start'>
-              <button type='button' className='btn btn-primary btn-lg px-4 me-md-2' onClick={btnLoginClick}>
-                <img src='/metamask.svg' width='64' className='me-3' />
-                Conectar metamask
-              </button>
-              <br></br>
-              {wallet}
-              {error}
-            </div>
+            {
+              !wallet
+                ? (
+                  <div className='d-grid gap-2 d-md-flex justify-content-md-start'>
+                    <button type='button' className='btn btn-primary btn-lg px-4 me-md-2' onClick={btnLoginClick}>
+                      <img src='/metamask.svg' width='64' className='me-3' />
+                      Conectar metamask
+                    </button>
+                    {error}
+                  </div>
+                )
+                : (
+                  <></>
+                )
+            }
           </div>
         </div>
         <Footer />
       </div>
-{/* teste */}
     </>
   )
 }
