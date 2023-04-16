@@ -2,7 +2,7 @@ import Head from "next/head";
 import Link from "next/link";
 import Footer from "@/components/Footer";
 import { useState } from "react";
-
+import { addCampaign, getLastCampaignId } from "@/services/Web3Service";
 
 export default function Create() {
 
@@ -14,8 +14,17 @@ export default function Create() {
     }
 
     function btnSaveClick() {
-        alert(JSON.stringify(campaign))
+        setMessage('Salvando...Aguarde....')
+        addCampaign(campaign)
+            .then(tx => getLastCampaignId())
+            .then(id => setMessage(`Campanha criada seu ID é: ${id}`))
+            .catch(err => {
+                console.error(err)
+                setMessage(err.message)
+            })
     }
+
+
     return (
         <>
             <Head>
@@ -32,19 +41,19 @@ export default function Create() {
                 <div className="col-6">
                     <div className="form-floating mb-3">
                         <input type="text" id="title" className="form-control" value={campaign.title} onChange={onInputChange} />
-                        <label for='title'>Título:</label>
+                        <label htmlFor='title'>Título:</label>
                     </div>
                     <div className="form-floating mb-3">
                         <textarea id="description" className="form-control" value={campaign.description} onChange={onInputChange} />
-                        <label for='description'>Descrição:</label>
-                    </div>
-                    <div className="form-floating mb-3">
-                        <input type="text" id="imageUrl" className="form-control" value={campaign.imageUrl} onChange={onInputChange} />
-                        <label for='imageUrl'>URL da imagem:</label>
+                        <label htmlFor='description'>Descrição:</label>
                     </div>
                     <div className="form-floating mb-3">
                         <input type="text" id="videoUrl" className="form-control" value={campaign.videoUrl} onChange={onInputChange} />
-                        <label for='videoUrl'>URL do video:</label>
+                        <label htmlFor='videoUrl'>URL do video:</label>
+                    </div>
+                    <div className="form-floating mb-3">
+                        <input type="text" id="imageUrl" className="form-control" value={campaign.imageUrl} onChange={onInputChange} />
+                        <label htmlFor='imageUrl'>URL da imagem:</label>
                     </div>
                 </div>
                 <div className="col-6 mb-3">
@@ -53,7 +62,13 @@ export default function Create() {
                 <div className="col-6 mb-3">
                     <Link href='/' className='btn btn-secondary col-12 p-3'>Voltar</Link>
                 </div>
-                <Footer></Footer>
+                {
+                    message
+                        ?
+                        <div className="alert alert-success p-3 col-6" role="alert">{message}</div>
+                        :<></>
+                }
+                <Footer />
             </div>
 
 
